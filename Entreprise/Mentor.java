@@ -23,7 +23,15 @@ public class Mentor extends Employer {
 	}
 
 	double getSalaire() {
-		return this.salaire;
+		double salaire, bonusJava=0, bonusMentore=0;
+		salaire = this.salaire;
+		if(this.langage =="Java"){
+			bonusJava = (salaire*0.1);
+		}
+		if(!this.mentees.isEmpty()){
+			bonusMentore = salaire*(0.05*this.mentees.size());
+		}
+		return salaire+bonusJava+bonusMentore;
 	}
 	
 	public String toString(){

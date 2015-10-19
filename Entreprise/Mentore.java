@@ -19,7 +19,11 @@ public class Mentore extends Employer {
 	}
 
 	double getSalaire() {
-		return this.salaire;
+		double bonusJava=0, salaire = this.salaire;
+		if(this.langage =="Java"){
+			bonusJava = (salaire*0.1);
+		}
+		return salaire+bonusJava;
 	}
 
 	public String toString(){
