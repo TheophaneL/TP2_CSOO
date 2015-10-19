@@ -17,10 +17,6 @@ public abstract class Employer {
 	Employer() {}
 
 	public
-	void setLangage(String langage) {
-		this.langage = langage;
-	}
-	
 	void addEntreprise(Entreprise companie){
 		if(this.entreprise==null){
 			this.entreprise = companie;
@@ -28,6 +24,12 @@ public abstract class Employer {
 	}
 
 	// ACCESSEURS
+	void setLangage(String langage) {
+		this.langage = langage;
+	}
+	void setNumPaye(int numP){
+		this.numP=numP;
+	}
 	String getLangage(){
 		return this.langage;
 	}
