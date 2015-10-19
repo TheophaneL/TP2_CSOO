@@ -1,5 +1,7 @@
 package Entreprise;
 
+import java.io.BufferedReader;
+import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.PrintWriter;
 import java.util.HashSet;
@@ -46,7 +48,7 @@ public class Entreprise {
 		PrintWriter fich = null;
 		try{
 			fich = new PrintWriter(new FileWriter(file));
-			
+
 		}catch(Exception e){
 			System.err.println(e);
 		}
@@ -71,34 +73,51 @@ public class Entreprise {
 		// TODO Auto-generated method stub
 
 		// TODO TODO PETIT
-		
+
+		// Lecture Fichier d'init
+		BufferedReader in = null;
+		try{
+			in= new BufferedReader(new FileReader("init.txt"));
+
+			String ligne =null;
+			String[] tokens=null;
+
+			while((ligne=in.readLine())!=null){
+				tokens = ligne.split(",");
+			}
+
+			in.close();
+		}catch(Exception e){
+			System.err.println(e);
+		}
+
 		// Create One company
 		Entreprise enterprise = new Entreprise("FulguroCode");
-		
+
 		// Create all employees
 		Mentor mentor1 = new Mentor("Roger", 1, 4000);
 		Mentor mentor2 = new Mentor("Huguette", 2, 3500);
 		mentor1.setLangage("C++");
 		mentor2.setLangage("caml");
-		
+
 		Mentore mentoree1 = new Mentore("Kevin", 10, 1500);
 		mentoree1.setLangage("C++");
 		Mentore mentoree2 = new Mentore("Kevina", 11, 1200);
-		mentoree2.setLangage("C++");
+		mentoree2.setLangage("Java");
 		Mentore mentoree3 = new Mentore("Jhonny", 12, 1000);
-		mentoree3.setLangage("caml");
-		
+		mentoree3.setLangage("C++");
+
 		enterprise.addEmployer(mentor1);
 		enterprise.addEmployer(mentor2);
-		
+
 		enterprise.addEmployer(mentoree1, mentor1);
 		enterprise.addEmployer(mentoree2, mentor2);
 		enterprise.addEmployer(mentoree3, mentor2);
-		
+
 		// Display salary of all employees
 		enterprise.displayEmployees();
 		enterprise.displayReport("FileTest.txt");
-		
+
 		// On console and in file.txt
 
 	}
