@@ -1,4 +1,4 @@
-package Entreprise;
+//package Entreprise;
 
 public abstract class Employer {
 	public
@@ -26,9 +26,6 @@ public abstract class Employer {
 	// ACCESSEURS
 	void setLangage(String langage) {
 		this.langage = langage;
-	}
-	void setNumPaye(int numP){
-		this.numP=numP;
 	}
 	String getLangage(){
 		return this.langage;
