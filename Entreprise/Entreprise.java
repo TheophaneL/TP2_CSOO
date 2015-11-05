@@ -45,6 +45,7 @@ public class Entreprise {
 	}
 
 	void displayEmployees() {
+		System.out.println("Calculs des salaires mensuels des employés de "+this.nom+"\n");
 		for (Employer employer : employers) {
 			System.out.println(employer.toString()+"\n");
 		}
@@ -94,7 +95,7 @@ public class Entreprise {
 		Iterator<Employer> i=this.employers.iterator();
 		while(i.hasNext() | !employee_found){
 			ebuff = i.next();
-			if (ebuff.getNom() == name)
+			if (ebuff.getNom().equals(name))
 				efound =ebuff;
 			employee_found = true;
 		}
@@ -164,8 +165,8 @@ public class Entreprise {
 		// Afficher console de controle :
 		int exit=0;
 		BufferedReader IN = null;
+		
 		do{
-
 			int select=-1;
 			String ligne=null;
 			String[] tokens =null ;
@@ -248,7 +249,6 @@ public class Entreprise {
 					langage = tokens[1];
 					Employer empl= enterprise.getEmployee(employer);
 					empl.setLangage(langage);
-					System.out.println("Employer : "+employer+"\nLangage : "+langage);
 				}
 				break;
 				// Ajouter un employer
@@ -289,35 +289,28 @@ public class Entreprise {
 			}
 
 		}while(exit!=1);
+		
 
 		System.out.println("Fin de programme, Fly Safe!!");
+		
+		
 		/*
-		// Create all employees
-		Mentor mentor1 = new Mentor("Roger", 1, 4000);
-		Mentor mentor2 = new Mentor("Huguette", 2, 3500);
-		mentor1.setLangage("C++");
-		mentor2.setLangage("caml");
-
-		Mentore mentoree1 = new Mentore("Kevin", 10, 1500);
+		// Try to convert Mentore in Mentor
+		Entreprise enter = new Entreprise("Cuffle");
+		
+		Employer mentoree1 = new Mentore("Kevin", 10, 1500);
 		mentoree1.setLangage("C++");
-		Mentore mentoree2 = new Mentore("Kevina", 11, 1200);
-		mentoree2.setLangage("Java");
-		Mentore mentoree3 = new Mentore("Jhonny", 12, 1000);
-		mentoree3.setLangage("C++");
-
-		enterprise.addEmployer(mentor1);
-		enterprise.addEmployer(mentor2);
-
-		enterprise.addEmployer(mentoree1, mentor1);
-		enterprise.addEmployer(mentoree2, mentor2);
-		enterprise.addEmployer(mentoree3, mentor2);
-
-		// Display salary of all employees
-		enterprise.displayEmployees();
-		enterprise.displayReport("FileTest.txt");
-
-		// On console and in file.txt
-		 */
+		enter.addEmployer(mentoree1);
+		
+		enter.displayEmployees();
+		
+		mentoree1 = new Mentor(mentoree1.nom,mentoree1.numP,mentoree1.salaire);
+		System.out.println(mentoree1);
+		enter.addEmployer(mentoree1);
+		enter.displayEmployees();
+		
+		System.out.println(enter.getEmployee(mentoree1.nom).equals(mentoree1));
+		*/
 	}
 
 }

@@ -13,6 +13,7 @@ public abstract class Employer {
 		this.nom=nom;
 		this.numP=numP;
 		this.salaire=salaire;
+		this.langage="";
 	}
 	Employer() {}
 
