@@ -25,7 +25,7 @@ public class Mentor extends Employer {
 	double getSalaire() {
 		double salaire, bonusJava=0, bonusMentore=0;
 		salaire = this.salaire;
-		if(this.langage =="Java"){
+		if(this.langage.equals("Java")){
 			bonusJava = (salaire*0.1);
 		}
 		if(!this.mentees.isEmpty()){

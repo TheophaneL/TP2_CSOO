@@ -1,5 +1,6 @@
 //package Entreprise;
 
+import java.awt.List;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.FileWriter;
@@ -7,6 +8,8 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.util.HashSet;
+import java.util.Iterator;
+import java.util.Vector;
 
 
 public class Entreprise {
@@ -32,13 +35,13 @@ public class Entreprise {
 		// Dans le cas contraire il est simplement ajouté a la liste des employer
 		// And display error log
 		employers.add(employer);
-		if( employer.getLangage() == mentor.getLangage()){
+		if( employer.getLangage().equals(mentor.getLangage())){
 			employer.addMentor(mentor);
 			mentor.addMentee(employer);
 		}else{
 			System.out.println("L'employer "+employer.getNom()+" ne pratique pas le même langage que le mentor "+mentor.getNom()+"\n");
 		}
-		
+
 	}
 
 	void displayEmployees() {
@@ -72,6 +75,34 @@ public class Entreprise {
 	}
 
 
+	public Employer getEmployee(int num_paye) {
+		Employer efound= null,ebuff = null;
+		boolean employee_found = false;
+		Iterator<Employer> i=this.employers.iterator();
+		while(i.hasNext() | !employee_found){
+			ebuff = i.next();
+			if (ebuff.getNumPaye() == num_paye)
+				efound =ebuff;
+			employee_found = true;
+		}
+		return efound;
+	}
+
+	public Employer getEmployee(String name) {
+		Employer efound= null,ebuff = null;
+		boolean employee_found = false;
+		Iterator<Employer> i=this.employers.iterator();
+		while(i.hasNext() | !employee_found){
+			ebuff = i.next();
+			if (ebuff.getNom() == name)
+				efound =ebuff;
+			employee_found = true;
+		}
+		return efound;
+	}
+
+
+
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
 
@@ -93,6 +124,7 @@ public class Entreprise {
 			double paye;
 			String langage;
 			int numMentor;
+			Mentor mentor;
 
 			while((ligne=in.readLine())!=null){
 				tokens = ligne.split(",");
@@ -105,20 +137,23 @@ public class Entreprise {
 					numMentor = Integer.parseInt(tokens[4]);
 					Mentore mentore = new Mentore(nom, numPaye, paye);
 					mentore.setLangage(langage);
-					
-					//enterprise.addEmployer(mentore, enterprise.employers.c);
-				}else{
-					// 4 elem for mentor
-					nom = tokens[0];
-					numPaye = Integer.parseInt(tokens[1]);
-					paye = Double.parseDouble(tokens[2]);
-					langage = tokens[3];
-					Mentor mentor = new Mentor(nom, numPaye, paye);
-					mentor.setLangage(langage);
-					enterprise.addEmployer(mentor);
-				}
+					mentor = (Mentor)enterprise.getEmployee(numMentor);
+					if( mentor != null){
+						//System.out.println("Langage mentee : "+mentore.getLangage()+" Langage mentor : "+mentor.getLangage());
+						enterprise.addEmployer(mentore, mentor);
+						}
+					}else{
+						// 4 elem for mentor
+						nom = tokens[0];
+						numPaye = Integer.parseInt(tokens[1]);
+						paye = Double.parseDouble(tokens[2]);
+						langage = tokens[3];
+						mentor = new Mentor(nom, numPaye, paye);
+						mentor.setLangage(langage);
+						enterprise.addEmployer(mentor);
+					}
 
-			}
+				}
 
 			in.close();
 		}catch(Exception e){
@@ -158,7 +193,7 @@ public class Entreprise {
 				e.printStackTrace();
 			}
 			try{
-			select = Integer.parseInt(ligne);
+				select = Integer.parseInt(ligne);
 			}catch(NumberFormatException nfe){
 				System.err.println(nfe);
 				System.out.println("Merci de saisir un des numéro indiqué!");
@@ -193,11 +228,13 @@ public class Entreprise {
 				}catch(Exception e){
 					System.err.println(e);
 				}
+				Employer employ = enterprise.getEmployee(Integer.parseInt(ligne));
+				System.out.println(employ);
 
 				break;
 				// Modifier le langage d'un employer
 			case 4:
-				System.out.println("Saisir le nom de l'employé a moddifier et le nouveau langage :");
+				System.out.println("Saisir le nom de l'employé a modifier et le nouveau langage :");
 				try{
 					tokens = IN.readLine().split(" ");
 				}catch(Exception e){
@@ -209,6 +246,8 @@ public class Entreprise {
 				}else{
 					employer =tokens[0];
 					langage = tokens[1];
+					Employer empl= enterprise.getEmployee(employer);
+					empl.setLangage(langage);
 					System.out.println("Employer : "+employer+"\nLangage : "+langage);
 				}
 				break;
@@ -229,7 +268,7 @@ public class Entreprise {
 					Mentor m = new Mentor(employer,numPaye,salaire);
 					m.setLangage(langage);
 					enterprise.addEmployer(m);
-					
+
 				}else if(tokens.length==5){
 					employer = tokens[0];
 					numPaye = Integer.parseInt(tokens[1]);
@@ -245,14 +284,14 @@ public class Entreprise {
 				}
 				break;
 			default:
-				System.out.println("Mauvais arguments");
+				System.out.println("RETRY MOTHAFOCKA!!!!");
 				break;
 			}
 
 		}while(exit!=1);
 
 		System.out.println("Fin de programme, Fly Safe!!");
-/*
+		/*
 		// Create all employees
 		Mentor mentor1 = new Mentor("Roger", 1, 4000);
 		Mentor mentor2 = new Mentor("Huguette", 2, 3500);
@@ -278,7 +317,7 @@ public class Entreprise {
 		enterprise.displayReport("FileTest.txt");
 
 		// On console and in file.txt
-*/
+		 */
 	}
 
 }
