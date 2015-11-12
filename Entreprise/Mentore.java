@@ -10,14 +10,14 @@ public class Mentore extends Employer {
 	}
 
 	Mentore(){
-		super();
+		this("",0,0.0);
 	}
 
 	void addMentor(Mentor mentor) {
 		// Ajout du mentor seulment sur le langage de programmation correspond
 		this.mentor = mentor;
 	}
-
+	/*
 	double getSalaire() {
 		double bonusJava=0, salaire = this.salaire;
 		if(this.langage.equals("Java")){
@@ -25,7 +25,7 @@ public class Mentore extends Employer {
 		}
 		return salaire+bonusJava;
 	}
-
+	 */
 	public String toString(){
 		String buff,buff2;
 		if(mentor==null){

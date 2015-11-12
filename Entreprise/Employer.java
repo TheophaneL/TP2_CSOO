@@ -6,16 +6,21 @@ public abstract class Employer {
 	double salaire;
 	int numP;
 	String langage;
-	
+
 	Entreprise entreprise;
-	protected
+
 	Employer(String nom, int numP, double salaire) {
 		this.nom=nom;
 		this.numP=numP;
 		this.salaire=salaire;
 		this.langage="";
 	}
-	Employer() {}
+	Employer() {
+		this.nom="";
+		this.salaire=0;
+		this.numP=0;
+		this.langage="";
+	}
 
 	public
 	void addEntreprise(Entreprise companie){
@@ -37,7 +42,14 @@ public abstract class Employer {
 	int getNumPaye(){
 		return this.numP;
 	}
-	abstract double getSalaire();
+	//abstract double getSalaire();
+	double getSalaire(){
+		double bonusJava=0, salaire = this.salaire;
+		if(this.langage.equals("Java")){
+			bonusJava = (salaire*0.1);
+		}
+		return salaire+bonusJava;
+	}
 	public
 	abstract String toString();
 

@@ -12,9 +12,9 @@ public class Mentor extends Employer {
 		super(nom, numP, salaire);
 		mentees = new HashSet<Mentore>();
 	}
-	
+
 	Mentor(){
-		super();
+		this("",0,0.0);
 	}
 
 	void addMentee(Mentore mentee) {
@@ -23,17 +23,15 @@ public class Mentor extends Employer {
 	}
 
 	double getSalaire() {
-		double salaire, bonusJava=0, bonusMentore=0;
-		salaire = this.salaire;
-		if(this.langage.equals("Java")){
-			bonusJava = (salaire*0.1);
-		}
+		double salairebonusJava=0, bonusMentore=0;
+		salairebonusJava = super.getSalaire();
+
 		if(!this.mentees.isEmpty()){
-			bonusMentore = salaire*(0.05*this.mentees.size());
+			bonusMentore = this.salaire*(0.05*this.mentees.size());
 		}
-		return salaire+bonusJava+bonusMentore;
+		return salairebonusJava+bonusMentore;
 	}
-	
+
 	public String toString(){
 		String buff,buff2;
 		buff2="";
