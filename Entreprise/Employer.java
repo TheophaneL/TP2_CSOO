@@ -1,4 +1,4 @@
-//package Entreprise;
+package Entreprise;
 
 public abstract class Employer {
 	public
@@ -50,7 +50,7 @@ public abstract class Employer {
 		}
 		return salaire+bonusJava;
 	}
-	public
-	abstract String toString();
+	public abstract void maj();
+	public abstract String toString();
 
 }

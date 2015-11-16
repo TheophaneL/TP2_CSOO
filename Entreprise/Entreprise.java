@@ -1,6 +1,5 @@
-//package Entreprise;
+package Entreprise;
 
-import java.awt.List;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.FileWriter;
@@ -34,18 +33,18 @@ public class Entreprise {
 			employer.addEntreprise(this);
 		}else{
 			if(employer.getNom().equals(emp.getNom())){
-				System.out.println("L'employer "+employer.getNom()+" au matricule "+employer.getNumPaye()+" est déjà enregistré");
+				System.err.println("L'employer "+employer.getNom()+" au matricule "+employer.getNumPaye()+" est déjà enregistré");
 			}else{
-				System.out.println("Le matricule "+employer.getNumPaye()+" est déjà utilisé");
+				System.err.println("Le matricule "+employer.getNumPaye()+" est déjà utilisé");
 			}
-			System.out.println("Renseignez un autre numéro de paye");
+			System.err.println("Renseignez un autre numéro de paye");
 		}
 	}
 
-	void addEmployer(Employer employer, int mentorNumpay /*Employer mentor*/) {
+	void addEmployer(Employer employer, int mentorNumpay) {
 		// Un mentoree doit pratiquer le même langage de prog que le mentor
 		// Dans le cas contraire il est simplement ajouté a la liste des employer
-		// And display error log
+		// S'il existe déjà, la fonction fait l'opération de setup Mentor/Mentoré
 		Employer mentor = null;
 		Employer menteS = null;
 		if(!employers.isEmpty()){
@@ -53,24 +52,36 @@ public class Entreprise {
 			menteS = this.getEmployee(employer.getNumPaye());
 		}
 		if(mentor == null){
-			System.out.println("Il n'existe pas de mentor avec le numéro "+mentorNumpay);
+			System.err.println("Il n'existe pas de mentor avec le numéro "+mentorNumpay);
 		}else if(menteS == null){
 			employers.add(employer);
 			if( employer.getLangage().equals(mentor.getLangage())){
+				if(mentor instanceof Mentore){
+					this.changeStatut(mentor);
+					mentor = this.getEmployee(mentorNumpay);
+				}
 				((Mentore)employer).addMentor((Mentor)mentor);
 				((Mentor)mentor).addMentee((Mentore)employer);
 			}else{
-				System.out.println("L'employer "+employer.getNom()+" ne pratique pas le même langage que le mentor "+mentor.getNom()+"\n");
+				System.err.println("L'employer "+employer.getNom()+" ne pratique pas le même langage que le mentor "+mentor.getNom()+"\n");
 			}
 		}else{
-			if(employer.getNom().equals(menteS.getNom())){
-				System.out.println("L'employer "+employer.getNom()+" au matricule "+employer.getNumPaye()+" est déjà enregistré");
+			if( menteS.getLangage().equals(mentor.getLangage())){
+				if(mentor instanceof Mentore){
+					this.changeStatut(mentor);
+					mentor = this.getEmployee(mentorNumpay);
+				}
+				((Mentore)menteS).addMentor((Mentor)mentor);
+				((Mentor)mentor).addMentee((Mentore)menteS);
+				//System.out.println("L'employer "+employer.getNom()+" au matricule "+employer.getNumPaye()+" est déjà enregistré");
 			}else{
-				System.out.println("Le matricule "+employer.getNumPaye()+" est déjà utilisé");
+				System.err.println("L'employer "+menteS.getNom()+" ne pratique pas le même langage que le mentor "+mentor.getNom()+"\n");
+				//System.out.println("Le matricule "+employer.getNumPaye()+" est déjà utilisé");
 			}
-			System.out.println("Renseignez un autre numéro de paye");
+			//System.out.println("Renseignez un autre numéro de paye");
 		}
 	}
+
 
 	void displayEmployees() {
 		System.out.println("Calculs des salaires mensuels des employés de "+this.nom+"\n");
@@ -129,14 +140,60 @@ public class Entreprise {
 		return efound;
 	}
 
+	void changeStatut(Employer employer){
+		if(this.employers.contains(employer)){
+			this.employers.remove(employer);
+			Employer buff = null;//employer;
+			if(employer instanceof Mentor){
+				//System.out.println("C'est un mentor");
+				// Employer de type Mentor a muter en Mentore
+				buff = new Mentore(employer.getNom(),employer.getNumPaye(),employer.getSalaire());
+				buff.setLangage(employer.getLangage());
+
+			}else{
+				//System.out.println("C'est un mentoré");
+				// Employer de type Mentore a muter en Mentor
+				buff = new Mentor(employer.getNom(),employer.getNumPaye(),employer.getSalaire());
+				buff.setLangage(employer.getLangage());
+			}
+			this.employers.add(buff);
+		}else{
+			System.out.println("pas dans la liste");
+		}
+	}
+
+	void correctStatus(){
+		if(!this.employers.isEmpty()){
+			Employer ebuff = null;
+			boolean stop = false;
+			while(!stop){
+				Iterator<Employer> it=this.employers.iterator();
+				while(it.hasNext()){
+					ebuff = it.next();
+					if (ebuff instanceof Mentor){
+						if(((Mentor)ebuff).mentees.isEmpty()){
+							this.changeStatut(ebuff);
+							break;
+						}
+					}
+					stop = true;
+				}
+			}
+		}
+	}
+
 
 
 	public static void main(String[] args) {
 		// TODO List
 		/*
+		 * - Modifier addEmployer(2) - Done
 		 * - Factoriser getSalaire - Done
-		 * - Gérer le changement Mentor-Mentoree quand un mentor change de langage
+		 * - Gérer la mise a jours des mentor-montore au changement de langage - Done
 		 * 
+		 * - Gérer le changement Mentor-Mentoree 
+		 * - Factoriser toString
+		 * - Move main
 		 */
 
 		// Create One company
@@ -146,7 +203,7 @@ public class Entreprise {
 		BufferedReader in = null;
 		try{
 
-			in= new BufferedReader(new FileReader("../init.txt"));
+			in= new BufferedReader(new FileReader("init.txt"));
 
 			String ligne =null;
 			String[] tokens=null;
@@ -198,6 +255,12 @@ public class Entreprise {
 		BufferedReader IN = null;
 
 		do{
+			//Une fois la lecture faite, comme pendant la création à la volé il n'est pas possible de savoir
+			//si un employé est un mentor ou un employer libre, tous ceux sans numéro de mentor sont crées comme mentor
+			// > On va considéré que ceux qui ne sont pas des mentor seront des mentore sans mentor.
+			// >> Un passage sur la liste d'employés après coup va permettre de typer correctement tous les employés
+			// >>> A chaque tour de boucle, on s'assure de bien faire les mises a jours
+			enterprise.correctStatus();
 			int select=-1;
 			String ligne=null;
 			String[] tokens =null ;
@@ -264,13 +327,13 @@ public class Entreprise {
 				if(employ != null){
 					System.out.println(employ);
 				}else {
-					System.out.println("Il n'existe pas d'employé avec le numéro "+ligne);
+					System.err.println("Il n'existe pas d'employé avec le numéro "+ligne);
 				}
 
 				break;
 
 			case 4: // Modifier le langage d'un employer
-				System.out.println("Saisir le nom de l'employé a modifier et le nouveau langage :");
+				System.out.println("Saisir le numéro de l'employé a modifier et le nouveau langage :");
 				try{
 					tokens = IN.readLine().split(" ");
 				}catch(Exception e){
@@ -280,48 +343,127 @@ public class Entreprise {
 				if(tokens.length !=2){
 					System.err.println("Mauvais arguments");
 				}else{
-					employer =tokens[0];
+					numPaye = Integer.parseInt(tokens[0]);
 					langage = tokens[1];
-					Employer empl= enterprise.getEmployee(employer);
+					Employer empl= enterprise.getEmployee(numPaye);
 					empl.setLangage(langage);
 				}
 				break;
 
 			case 5: // Ajouter un employer
-				System.out.println("Renseigner le nouvel employer sous la forme :\n"
-						+ "Nom,Numéro de paye,Salaire,Langage,Numero Mentor(optionnel)");
+				System.out.println("Pour un nouveau mentor : 1");
+				System.out.println("Pour un nouveau mentoré : 2");
+				System.out.println("Pour un simple employé : 3");
 				try{
-					tokens = IN.readLine().split(",");
+					ligne = IN.readLine();
 				}catch(Exception e){
 					System.err.println(e);
 				}
-				if(tokens.length==4){
-					employer = tokens[0];
-					numPaye = Integer.parseInt(tokens[1]);
-					salaire = Double.parseDouble(tokens[2]);
-					langage = tokens[3];
-					Mentor m = new Mentor(employer,numPaye,salaire);
-					m.setLangage(langage);
-					enterprise.addEmployer(m);
+				// Mentor ou mentoré
+				switch (Integer.parseInt(ligne)) {
+				case 1:
+					System.out.println("Renseigner le nouveau mentor sous la forme :\n"
+							+ "Nom,Numéro de paye,Salaire,Langage");
+					try{
+						tokens = IN.readLine().split(",");
+					}catch(Exception e){
+						System.err.println(e);
+					}
+					if(tokens.length==4){
+						employer = tokens[0];
+						numPaye = Integer.parseInt(tokens[1]);
+						salaire = Double.parseDouble(tokens[2]);
+						langage = tokens[3];
+						//Recherche si le mentor existe déjà
+						if((enterprise.getEmployee(numPaye))!=null){
+							System.err.println("Le mentor numéro "+numPaye+" est déjà enregistré dans l'entreprise");
+						}else{
+							Employer m = new Mentor(employer,numPaye,salaire);
+							m.setLangage(langage);
+							enterprise.addEmployer(m);
+						}
 
-				}else if(tokens.length==5){
-					employer = tokens[0];
-					numPaye = Integer.parseInt(tokens[1]);
-					salaire = Double.parseDouble(tokens[2]);
-					langage = tokens[3];
-					mentorN = Integer.parseInt(tokens[4]);
-					Employer mentee = new Mentore(employer, numPaye, salaire);
-					//Employer mentor = enterprise.getEmployee(mentorN);
-					//System.out.println(mentor.toString());
-					mentee.setLangage(langage);
-					enterprise.addEmployer(mentee,mentorN);
+						System.out.println("Indiquer les employés a superviser sous la forme :\nNuméro 1,Numéro 2,...");
+						try{
+							tokens = IN.readLine().split(",");
+						}catch(Exception e){
+							System.err.println(e);
+						}
+						for (String numMentee : tokens) {
+							Employer ebuff = enterprise.getEmployee(Integer.parseInt(numMentee));
+							if(ebuff!=null){
+								if(ebuff instanceof Mentore){
+									if(((Mentore)ebuff).mentor == null){
+										enterprise.addEmployer(enterprise.getEmployee(Integer.parseInt(numMentee)), numPaye);	
+									}else{
+										System.err.println("L'employé numéro "+numMentee+" a déjà un mentor" );
+									}
+								}else{
+									System.err.println("L'employé numéro "+numMentee+" est un mentor");
+								}
+							}else{
+								System.err.println("L'employé numéro "+numMentee+" n'est pas enregistré dans l'entreprise");
+							}
 
-				}else{
+						}
+
+					}else{
+						System.err.println("Mauvais arguments");
+					}
+					break;
+				case 2:
+					System.out.println("Renseigner le nouveau mentoré sous la forme :\n"
+							+ "Nom,Numéro de paye,Salaire,Langage,Numero du Mentor");
+					try{
+						tokens = IN.readLine().split(",");
+					}catch(Exception e){
+						System.err.println(e);
+					}
+					if(tokens.length==5){
+						employer = tokens[0];
+						numPaye = Integer.parseInt(tokens[1]);
+						salaire = Double.parseDouble(tokens[2]);
+						langage = tokens[3];
+						mentorN = Integer.parseInt(tokens[4]);
+						Employer mentee = new Mentore(employer, numPaye, salaire);
+						mentee.setLangage(langage);
+						enterprise.addEmployer(mentee,mentorN);
+					}else{
+						System.err.println("Mauvais arguments");
+					}
+					break;
+				case 3:
+					System.out.println("Renseigner le nouvel employé sous la forme :\n"
+							+ "Nom,Numéro de paye,Salaire,Langage");
+					try{
+						tokens = IN.readLine().split(",");
+					}catch(Exception e){
+						System.err.println(e);
+					}
+					if(tokens.length==4){
+						employer = tokens[0];
+						numPaye = Integer.parseInt(tokens[1]);
+						salaire = Double.parseDouble(tokens[2]);
+						langage = tokens[3];
+						//Recherche si le mentor existe déjà
+						if((enterprise.getEmployee(numPaye))!=null){
+							System.err.println("Il existe déjà un employé avec le nméro "+numPaye);
+						}else{
+							Mentor m = new Mentor(employer,numPaye,salaire);
+							m.setLangage(langage);
+							enterprise.addEmployer(m);
+						}
+					}else{
+						System.err.println("Mauvais arguments");
+					}
+					break;
+				default:
 					System.err.println("Mauvais arguments");
+					break;
 				}
 				break;
 			default:
-				System.out.println("RETRY MOTHAFOCKA!!!!");
+				System.err.println("Mauvais arguments");
 				break;
 			}
 

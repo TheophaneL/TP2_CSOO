@@ -1,31 +1,36 @@
-//package Entreprise;
+package Entreprise;
 
 public class Mentore extends Employer {
 
-	public
-	Mentor mentor;
+	public Mentor mentor;
 
-	Mentore(String nom, int numP, double salaire) {
+	public Mentore(String nom, int numP, double salaire) {
 		super(nom, numP, salaire);
 	}
 
-	Mentore(){
+	public Mentore(){
 		this("",0,0.0);
 	}
 
-	void addMentor(Mentor mentor) {
+	public void addMentor(Mentor mentor) {
 		// Ajout du mentor seulment sur le langage de programmation correspond
 		this.mentor = mentor;
 	}
-	/*
-	double getSalaire() {
-		double bonusJava=0, salaire = this.salaire;
-		if(this.langage.equals("Java")){
-			bonusJava = (salaire*0.1);
+
+	public void setLangage(String langage){
+		super.setLangage(langage);
+		if(this.mentor!=null){
+			this.mentor.maj();
+			this.maj();
 		}
-		return salaire+bonusJava;
 	}
-	 */
+
+	public void maj(){
+		if(!mentor.getLangage().equals(this.langage)){
+			this.mentor=null;
+		}
+	}
+
 	public String toString(){
 		String buff,buff2;
 		if(mentor==null){

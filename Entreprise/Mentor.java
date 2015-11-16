@@ -1,28 +1,49 @@
-//package Entreprise;
+package Entreprise;
 
 import java.util.HashSet;
+import java.util.Iterator;
 
 public class Mentor extends Employer {
 
-	public
-	HashSet<Mentore> mentees;
+	public HashSet<Mentore> mentees;
 
-	public
-	Mentor(String nom, int numP, double salaire) {
+	public	Mentor(String nom, int numP, double salaire) {
 		super(nom, numP, salaire);
 		mentees = new HashSet<Mentore>();
 	}
 
-	Mentor(){
+	public Mentor(){
 		this("",0,0.0);
 	}
 
-	void addMentee(Mentore mentee) {
+	public void addMentee(Mentore mentee) {
 		// Ajout du mentee seulement si le langage de programmation correpond
 		mentees.add(mentee);
 	}
 
-	double getSalaire() {
+	public void setLangage(String langage){
+		super.setLangage(langage);
+		if(!this.mentees.isEmpty()){
+			Iterator<Mentore> i=this.mentees.iterator();
+			while(i.hasNext()){
+				i.next().maj();
+			}
+			this.maj();
+		}
+	}
+
+	public void maj(){
+		Mentore m = null;
+		Iterator<Mentore> i=this.mentees.iterator();
+		while(i.hasNext()){
+			m = i.next();
+			if(!m.getLangage().equals(this.langage)){
+				i.remove();
+			}
+		}
+	}
+
+	public double getSalaire() {
 		double salairebonusJava=0, bonusMentore=0;
 		salairebonusJava = super.getSalaire();
 
