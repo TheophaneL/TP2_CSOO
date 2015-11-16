@@ -94,11 +94,11 @@ public class Main {
 			String langage = null;
 
 			System.out.println("\n==== Panel de controle de l'entreprise "+enterprise.getNom()+" ===");
-			System.out.println("- Afficher  la liste des employer, saisir 1");
+			System.out.println("- Afficher  la liste des employés, saisir 1");
 			System.out.println("- Générer le rapport, saisir 2");
-			System.out.println("- Chercher un employé en particulier, saisir 3");
-			System.out.println("- Modifier qualification d'un employer, saisir 4");
-			System.out.println("- Ajouter un employer, saisir 5");
+			System.out.println("- Chercher un employé en particulié, saisir 3");
+			System.out.println("- Modifier qualification d'un employé, saisir 4");
+			System.out.println("- Ajouter un employé, saisir 5");
 			System.out.println("- Quitter le programme, saisir 0");
 			try{
 				IN= new BufferedReader(new InputStreamReader(System.in));
@@ -114,7 +114,7 @@ public class Main {
 				select = Integer.parseInt(ligne);
 			}catch(NumberFormatException nfe){
 				System.err.println(nfe);
-				System.out.println("Merci de saisir un des numéro indiqué!");
+				System.out.println("Merci de saisir un des numéros indiqués!");
 				continue;
 			}
 			switch (select) {
@@ -140,7 +140,7 @@ public class Main {
 				break;
 
 			case 3: // Afficher un employé particulier séléctionné par son numéro de paye
-				System.out.println("Saisir numéro de paye de l'employer cherché :");
+				System.out.println("Saisir numéro de paye de l'employé cherché :");
 				try{
 					ligne = IN.readLine();
 				}catch(Exception e){
@@ -156,9 +156,9 @@ public class Main {
 				break;
 
 			case 4: // Modifier le langage d'un employer
-				System.out.println("Saisir le numéro de l'employé a modifier et le nouveau langage :");
+				System.out.println("Saisir le numéro de l'employé a modifier et le nouveau langage :\nNuméro,Langage");
 				try{
-					tokens = IN.readLine().split(" ");
+					tokens = IN.readLine().split(",");
 				}catch(Exception e){
 					System.err.println(e);
 				}
@@ -185,8 +185,7 @@ public class Main {
 				// Mentor ou mentoré
 				switch (Integer.parseInt(ligne)) {
 				case 1:
-					System.out.println("Renseigner le nouveau mentor sous la forme :\n"
-							+ "Nom,Numéro de paye,Salaire,Langage");
+					System.out.println("Renseigner le nouveau mentor sous la forme :\nNom,Numéro de paye,Salaire,Langage");
 					try{
 						tokens = IN.readLine().split(",");
 					}catch(Exception e){

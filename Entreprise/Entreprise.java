@@ -33,7 +33,7 @@ public class Entreprise {
 			employer.addEntreprise(this);
 		}else{
 			if(employer.getNom().equals(emp.getNom())){
-				System.err.println("L'employer "+employer.getNom()+" au matricule "+employer.getNumPaye()+" est déjà enregistré");
+				System.err.println("L'employé "+employer.getNom()+" au matricule "+employer.getNumPaye()+" est déjà enregistré");
 			}else{
 				System.err.println("Le matricule "+employer.getNumPaye()+" est déjà utilisé");
 			}
@@ -63,7 +63,7 @@ public class Entreprise {
 				((Mentore)employer).addMentor((Mentor)mentor);
 				((Mentor)mentor).addMentee((Mentore)employer);
 			}else{
-				System.err.println("L'employer "+employer.getNom()+" ne pratique pas le même langage que le mentor "+mentor.getNom()+"\n");
+				System.err.println("L'employé "+employer.getNumPaye()+" ne pratique pas le même langage que le mentor "+mentor.getNumPaye()+"\n");
 			}
 		}else{
 			if( menteS.getLangage().equals(mentor.getLangage())){
@@ -75,7 +75,7 @@ public class Entreprise {
 				((Mentor)mentor).addMentee((Mentore)menteS);
 				//System.out.println("L'employer "+employer.getNom()+" au matricule "+employer.getNumPaye()+" est déjà enregistré");
 			}else{
-				System.err.println("L'employer "+menteS.getNom()+" ne pratique pas le même langage que le mentor "+mentor.getNom()+"\n");
+				System.err.println("L'employé "+menteS.getNumPaye()+" ne pratique pas le même langage que le mentor "+mentor.getNumPaye()+"\n");
 				//System.out.println("Le matricule "+employer.getNumPaye()+" est déjà utilisé");
 			}
 			//System.out.println("Renseignez un autre numéro de paye");
@@ -158,7 +158,7 @@ public class Entreprise {
 			}
 			this.employers.add(buff);
 		}else{
-			System.out.println("pas dans la liste");
+			System.err.println("pas dans la liste");
 		}
 	}
 
