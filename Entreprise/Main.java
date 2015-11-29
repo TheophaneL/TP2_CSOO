@@ -1,4 +1,4 @@
-package Entreprise;
+//package Entreprise;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
@@ -26,7 +26,7 @@ public class Main {
 		BufferedReader in = null;
 		try{
 
-			in= new BufferedReader(new FileReader("init.txt"));
+			in= new BufferedReader(new FileReader("../init.txt"));
 
 			String ligne =null;
 			String[] tokens=null;
@@ -182,8 +182,8 @@ public class Main {
 				}catch(Exception e){
 					System.err.println(e);
 				}
-				// Mentor ou mentoré
 				switch (Integer.parseInt(ligne)) {
+				// Mentor
 				case 1:
 					System.out.println("Renseigner le nouveau mentor sous la forme :\nNom,Numéro de paye,Salaire,Langage");
 					try{
@@ -233,6 +233,7 @@ public class Main {
 						System.err.println("Mauvais arguments");
 					}
 					break;
+				// Mentee
 				case 2:
 					System.out.println("Renseigner le nouveau mentoré sous la forme :\n"
 							+ "Nom,Numéro de paye,Salaire,Langage,Numero du Mentor");
@@ -254,6 +255,7 @@ public class Main {
 						System.err.println("Mauvais arguments");
 					}
 					break;
+				// Employer alone
 				case 3:
 					System.out.println("Renseigner le nouvel employé sous la forme :\n"
 							+ "Nom,Numéro de paye,Salaire,Langage");
